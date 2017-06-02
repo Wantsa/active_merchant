@@ -543,11 +543,15 @@ module ActiveMerchant #:nodoc:
               doc["v1"].nr billing_address[:phone].gsub(/\D/, '') if billing_address[:phone]
             end
             doc["v1"].addrLn1 billing_address[:address1]
-            doc["v1"].addrLn2 billing_address[:address2]
+            doc["v1"].addrLn2 billing_address[:address2] if billing_address[:address2]
             doc["v1"].city billing_address[:city]
-            doc["v1"].state billing_address[:state]
             doc["v1"].zipCode billing_address[:zip]
-            doc["v1"].ctry "US"
+
+            # Don't send state and country unless country is US and state is present
+            if billing_address[:country] == "US"
+              doc["v1"].state billing_address[:state] if billing_address[:state]
+              doc["v1"].ctry "US"
+            end
           end
 
           doc["v1"].email options[:email] if options[:email]
