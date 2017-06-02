@@ -196,6 +196,7 @@ module ActiveMerchant #:nodoc:
             add_contact(doc, payment_method.name, options)
             add_amount(doc, amount)
             add_order_number(doc, options)
+            add_payment_description(doc, options)
           end
         elsif echeck?(payment_method)
           action = :purchase_echeck
@@ -211,6 +212,7 @@ module ActiveMerchant #:nodoc:
           request = build_xml_transaction_request do |doc|
             add_amount(doc, amount)
             add_wallet_id(doc, wallet_id)
+            add_payment_description(doc, options)
           end
         end
 
@@ -223,12 +225,14 @@ module ActiveMerchant #:nodoc:
             add_credit_card(doc, payment_method)
             add_contact(doc, payment_method.name, options)
             add_amount(doc, amount)
+            add_payment_description(doc, options)
           end
         else
           wallet_id = split_authorization(payment_method).last
           request = build_xml_transaction_request do |doc|
             add_amount(doc, amount)
             add_wallet_id(doc, wallet_id)
+            add_payment_description(doc, options)
           end
         end
 
@@ -604,6 +608,14 @@ module ActiveMerchant #:nodoc:
       def add_wallet_id(doc, wallet_id)
         doc["v1"].recurMan do
           doc["v1"].id wallet_id
+        end
+      end
+
+      def add_payment_description(doc, options)
+        return unless options[:description]
+
+        doc["v1"].pos do
+          doc["v1"].pmtDesc options[:description]
         end
       end
     end
