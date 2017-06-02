@@ -180,6 +180,7 @@ module ActiveMerchant #:nodoc:
         void_echeck: 16,
 
         wallet_sale: 14,
+        void_wallet_sale: 6,
       }
 
       def initialize(options={})
