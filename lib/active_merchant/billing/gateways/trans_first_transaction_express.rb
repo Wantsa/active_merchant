@@ -612,10 +612,10 @@ module ActiveMerchant #:nodoc:
       end
 
       def add_payment_description(doc, options)
-        return unless options[:description]
+        return unless description = options[:description] || options[:merchant]
 
         doc["v1"].pos do
-          doc["v1"].pmtDesc options[:description]
+          doc["v1"].pmtDesc description
         end
       end
     end
