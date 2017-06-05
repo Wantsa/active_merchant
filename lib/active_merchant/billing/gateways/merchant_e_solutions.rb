@@ -94,6 +94,15 @@ module ActiveMerchant #:nodoc:
         commit('V', nil, options.merge(post))
       end
 
+      def verify(creditcard_or_card_id, options = {})
+        post = {}
+        post[:client_reference_number] = options[:customer]       if options.has_key?(:customer)
+        post[:moto_ecommerce_ind] = options[:moto_ecommerce_ind]  if options.has_key?(:moto_ecommerce_ind)
+        add_payment_source(post, creditcard_or_card_id, options)
+        add_address(post, options)
+        commit('A', 0.0, post)
+      end
+
       private
 
       def add_address(post, options)
@@ -107,6 +116,14 @@ module ActiveMerchant #:nodoc:
         if options.has_key? :order_id
           order_id = options[:order_id].to_s.gsub(/[^\w.]/, '')
           post[:invoice_number] = truncate(order_id, 17)
+        end
+
+        if options.has_key? :currency_code
+          post[:currency_code] = options[:currency_code].to_s
+        end
+
+        if options.has_key? :merchant
+          post[:merchant_name] = options[:merchant]
         end
       end
 
