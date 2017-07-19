@@ -615,7 +615,7 @@ module ActiveMerchant #:nodoc:
         return unless description = options[:description] || options[:merchant]
 
         doc["v1"].pos do
-          doc["v1"].pmtDesc description
+          doc["v1"].pmtDesc description.to_s[0...25]
         end
       end
     end
