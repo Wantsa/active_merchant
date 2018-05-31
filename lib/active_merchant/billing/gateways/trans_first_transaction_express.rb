@@ -613,9 +613,9 @@ module ActiveMerchant #:nodoc:
 
       def add_payment_description(doc, options)
         return unless description = options[:description] || options[:merchant]
-
+        
         doc["v1"].pos do
-          doc["v1"].pmtDesc description.to_s[0...25]
+          doc["v1"].pmtDesc description.to_s[0...25].gsub('’', ' ')
         end
       end
     end
